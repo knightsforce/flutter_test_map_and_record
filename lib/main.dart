@@ -30,7 +30,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String _text = '0';
+  String _text = 'Остановлено';
   bool _isRun = false;
   var _recorderSubscription;
 
@@ -51,10 +51,9 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  Future<int> _runRecord() async {
-
-    final response = new ReceivePort();
-    await Isolate.spawn(_isolate, response.sendPort);
+  _runRecord() async {
+    _text = 'Запущено';
+    await _record();
 
 
   //   _recorderSubscription = flutterSound.onRecorderStateChanged.listen((e) {
@@ -69,24 +68,13 @@ class _MyHomePageState extends State<MyHomePage> {
     String result = await flutterSound.stopRecorder();
     print('stopRecorder: $result');
 
-    _text = '0';
+    _text = 'Остановлено';
 
     // if (_recorderSubscription != null) {
     //   _recorderSubscription.cancel();
     //   _recorderSubscription = null;
     // }
 
-  }
-
-  void _isolate(SendPort initialReplyTo) {
-    final port = new ReceivePort();
-    initialReplyTo.send(port.sendPort);
-
-    _record();
-
-    port.listen((message) {
-      print('listen');
-    });
   }
 
   _record() async {
